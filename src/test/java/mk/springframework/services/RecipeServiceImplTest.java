@@ -1,5 +1,7 @@
 package mk.springframework.services;
 
+import mk.springframework.converters.RecipeCommandToRecipe;
+import mk.springframework.converters.RecipeToRecipeCommand;
 import mk.springframework.domain.Recipe;
 import mk.springframework.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,14 +24,20 @@ class RecipeServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
     @BeforeEach
     public void setUp() throws Exception{
         MockitoAnnotations.initMocks(this);
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
-    public void getRecipeByIdTest(){
+    public void getRecipeByIdTest() throws Exception {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
@@ -38,21 +46,25 @@ class RecipeServiceImplTest {
 
         Recipe recipeReturned = recipeService.findById(1L);
 
-        assertNotNull(recipeReturned);
+        assertNotNull( recipeReturned);
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
 
     @Test
-    void getRecipes() {
-        Recipe recipe = new Recipe();
-        HashSet recipesData = new HashSet();
-        recipesData.add(recipe);
+    public void getRecipesTest() throws Exception {
 
-        when(recipeRepository.findAll()).thenReturn(recipesData);
+        Recipe recipe = new Recipe();
+        HashSet receipesData = new HashSet();
+        receipesData.add(recipe);
+
+        when(recipeService.getRecipes()).thenReturn(receipesData);
 
         Set<Recipe> recipes = recipeService.getRecipes();
+
         assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
+        verify(recipeRepository, never()).findById(anyLong());
     }
+
 }
