@@ -2,6 +2,7 @@ package mk.springframework.controllers;
 
 import mk.springframework.commands.RecipeCommand;
 import mk.springframework.domain.Recipe;
+import mk.springframework.exceptions.NotFoundException;
 import mk.springframework.services.RecipeService;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +51,13 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void testGetRecipeNotFound() throws Exception {
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

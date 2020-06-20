@@ -4,6 +4,7 @@ import mk.springframework.commands.RecipeCommand;
 import mk.springframework.converters.RecipeCommandToRecipe;
 import mk.springframework.converters.RecipeToRecipeCommand;
 import mk.springframework.domain.Recipe;
+import mk.springframework.exceptions.NotFoundException;
 import mk.springframework.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,6 +51,17 @@ class RecipeServiceImplTest {
         assertNotNull(recipeReturned, "Null recipe returned");
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void getRecipeByIdTestNotFound() throws Exception {
+
+        Optional<Recipe> recipeOptional = Optional.empty();
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        //should go boom
+        Exception exception = assertThrows(NotFoundException.class, () ->  recipeService.findById(anyLong()));
+        assertTrue(exception.getMessage().contains("Recipe Not Found!"));
     }
 
     @Test
