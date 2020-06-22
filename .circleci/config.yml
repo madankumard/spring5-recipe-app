@@ -13,4 +13,4 @@ jobs:
   build:
     steps:
       - codecov/upload:
-          file: {{ coverage_report_filepath }}
+          file: target/surefire-reports
