@@ -14,6 +14,9 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
     steps:
+      - checkout
       - run: mvn cobertura:cobertura
+      - store_test_results:
+          path: target/surefire-reports
       - name: Send to CodeCov
         command: bash <(curl -s https://codecov.io/bash)
