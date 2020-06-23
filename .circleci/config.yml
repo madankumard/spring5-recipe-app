@@ -8,9 +8,3 @@ workflows:
   maven_test:
     jobs:
       - maven/test # checkout, build, test, and upload test results
-
-jobs:
-  build:
-    steps:
-      - codecov/upload:
-          file: target/surefire-reports
