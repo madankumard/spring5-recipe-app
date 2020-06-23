@@ -44,8 +44,5 @@ jobs:
           path: target/surefire-reports
 
       - run:
-          name: Send to CodeCov
-          command: bash <(curl -s https://codecov.io/bash)
-
-      - name: Coveralls GitHub Action
-        uses: coverallsapp/github-action@v1.1.1
+          name: Coveralls GitHub Action
+          uses: coverallsapp/github-action@v1.1.1
