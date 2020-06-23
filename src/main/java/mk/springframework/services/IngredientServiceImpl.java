@@ -35,6 +35,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         if (!recipeOptional.isPresent()) {
             log.error("recipe id not found Id: " + recipeId);
+            return null;
         }
 
         Recipe recipe = recipeOptional.get();
